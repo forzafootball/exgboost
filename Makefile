@@ -51,7 +51,7 @@ $(EXGBOOST_SO): $(EXGBOOST_CACHE_SO)
 $(EXGBOOST_CACHE_SO): $(XGBOOST_LIB_DIR_FLAG) $(C_SRCS)
 	@mkdir -p cache
 	cp -a $(XGBOOST_LIB_DIR) $(EXGBOOST_CACHE_LIB_DIR)
-	mv $(XGBOOST_LIB_DIR)/lib/$(LIBXGBOOST) $(EXGBOOST_CACHE_LIB_DIR)
+	cp $(XGBOOST_DIR)/lib/$(LIBXGBOOST) $(EXGBOOST_CACHE_LIB_DIR)
 	$(CC) $(CFLAGS) $(wildcard $(EXGBOOST_DIR)/src/*.c) $(NIF_LDFLAGS) -o $(EXGBOOST_CACHE_SO)
 	$(POST_INSTALL)
 
@@ -70,7 +70,7 @@ $(XGBOOST_DIR)/.git:
 # It only contains the build commands.
 $(XGBOOST_LIB_DIR_FLAG): $(XGBOOST_DIR)/.git
 	cd $(XGBOOST_DIR) && \
-		cmake -B build -S . -DCMAKE_INSTALL_PREFIX=$(XGBOOST_LIB_DIR) -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=RelWithDebInfo -GNinja $(CMAKE_FLAGS) && \
+		cmake -B build -S . -DCMAKE_INSTALL_PREFIX=$(XGBOOST_LIB_DIR) -DCMAKE_BUILD_TYPE=RelWithDebInfo -GNinja $(CMAKE_FLAGS) && \
 		ninja -C build install
 	touch $(XGBOOST_LIB_DIR_FLAG)
 
