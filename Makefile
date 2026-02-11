@@ -69,7 +69,7 @@ $(XGBOOST_DIR)/.git:
 # It only contains the build commands.
 $(XGBOOST_LIB_DIR_FLAG): $(XGBOOST_DIR)/.git
 	cd $(XGBOOST_DIR) && \
-		cmake -B build -S . -DCMAKE_INSTALL_PREFIX=$(XGBOOST_LIB_DIR) -DCMAKE_BUILD_TYPE=RelWithDebInfo -GNinja $(CMAKE_FLAGS) && \
+		cmake -B build -S . -DCMAKE_INSTALL_PREFIX=$(XGBOOST_LIB_DIR) -DCMAKE_INSTALL_LIBDIR=lib -DCMAKE_BUILD_TYPE=RelWithDebInfo -GNinja $(CMAKE_FLAGS) && \
 		ninja -C build install
 	touch $(XGBOOST_LIB_DIR_FLAG)
 
