@@ -25,11 +25,11 @@ CFLAGS = -I$(EXGBOOST_DIR)/include -I$(XGBOOST_LIB_DIR)/include -I$(XGBOOST_DIR)
 
 C_SRCS = $(wildcard $(EXGBOOST_DIR)/src/*.c) $(wildcard $(EXGBOOST_DIR)/include/*.h)
 
-LDFLAGS = -L$(EXGBOOST_CACHE_LIB_DIR) -lxgboost
+NIF_LDFLAGS = -L$(EXGBOOST_CACHE_LIB_DIR) -lxgboost
 
 ifeq ($(shell uname -s), Darwin)
 	POST_INSTALL = install_name_tool $(EXGBOOST_CACHE_SO) -change @rpath/libxgboost.dylib @loader_path/lib/libxgboost.dylib
-	LDFLAGS += -flat_namespace -undefined suppress
+	NIF_LDFLAGS += -flat_namespace -undefined suppress
 	LIBXGBOOST = libxgboost.dylib
 	ifeq ($(USE_LLVM_BREW), true)
 		LLVM_PREFIX=$(shell brew --prefix llvm)
@@ -37,8 +37,8 @@ ifeq ($(shell uname -s), Darwin)
 	endif
 else
 	LIBXGBOOST = libxgboost.so
-	LDFLAGS += -Wl,-rpath,'$$ORIGIN/lib'
-	LDFLAGS += -Wl,--allow-multiple-definition
+	NIF_LDFLAGS += -Wl,-rpath,'$$ORIGIN/lib'
+	NIF_LDFLAGS += -Wl,--allow-multiple-definition
 	POST_INSTALL = $(NOOP)
 endif
 
@@ -51,7 +51,7 @@ $(EXGBOOST_CACHE_SO): $(XGBOOST_LIB_DIR_FLAG) $(C_SRCS)
 	@mkdir -p cache
 	cp -a $(XGBOOST_LIB_DIR) $(EXGBOOST_CACHE_LIB_DIR)
 	mv $(XGBOOST_LIB_DIR)/lib/$(LIBXGBOOST) $(EXGBOOST_CACHE_LIB_DIR)
-	$(CC) $(CFLAGS) $(wildcard $(EXGBOOST_DIR)/src/*.c) $(LDFLAGS) -o $(EXGBOOST_CACHE_SO)
+	$(CC) $(CFLAGS) $(wildcard $(EXGBOOST_DIR)/src/*.c) $(NIF_LDFLAGS) -o $(EXGBOOST_CACHE_SO)
 	$(POST_INSTALL)
 
 # This new target handles fetching the source code.
