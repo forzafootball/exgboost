@@ -5,9 +5,8 @@
 TEMP ?= $(HOME)/.cache
 XGBOOST_CACHE ?= $(TEMP)/exgboost
 XGBOOST_GIT_REPO ?= https://github.com/dmlc/xgboost.git
-# v3.0.5 tagged release — last version compatible with exgboost's NIF C code
-# (XGDMatrixCreateFromCSREx was removed in v3.1.0)
-XGBOOST_GIT_REV ?= v3.0.5
+# v3.1.3 tagged release — upgraded from v3.0.5 after removing dead CSREx code
+XGBOOST_GIT_REV ?= v3.1.3
 XGBOOST_NS = xgboost-$(XGBOOST_GIT_REV)
 XGBOOST_DIR = $(XGBOOST_CACHE)/$(XGBOOST_NS)
 XGBOOST_LIB_DIR = $(XGBOOST_DIR)/build/xgboost
